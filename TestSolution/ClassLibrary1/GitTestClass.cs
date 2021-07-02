@@ -7,6 +7,7 @@ namespace ClassLibrary1
     public class GitTestClass
     {
         public int Id { get; set; }
+        public int Test { get; set; }
 
 
     }
