@@ -8,6 +8,7 @@ namespace ClassLibrary1
     {
         public int Id { get; set; }
         public int Test { get; set; }
+        public int AnotherTest { get; set; }
 
 
     }
