@@ -9,7 +9,7 @@ namespace Toy.Services.Services
 {
     public interface IContactServices
     {
-        Task Insert(ContactInsertDto contactDto);
+        Task<int> Insert(ContactInsertDto contactDto);
         Task<Contact> Get(int id);
         Task Update(Contact contact);
         Task Delete(Contact contact);

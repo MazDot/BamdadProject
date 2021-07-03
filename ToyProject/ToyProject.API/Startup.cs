@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Toy.Entities.Interfaces;
 using Toy.Persistance.Database;
+using Toy.Persistance.Repository;
+using Toy.Services.Services;
 
 namespace ToyProject.API
 {
@@ -28,8 +30,9 @@ namespace ToyProject.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IAppDbContext, AppDbContext>();
-
+            //repositories
+            services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IContactServices, ContactServices>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<AppDbContext>

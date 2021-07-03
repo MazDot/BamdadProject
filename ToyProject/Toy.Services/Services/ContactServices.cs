@@ -11,42 +11,40 @@ namespace Toy.Services.Services
 {
     public class ContactServices : IContactServices
     {
-        private readonly IAppDbContext dbContext;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IContactRepository contactRepo;
 
-        public ContactServices(IAppDbContext dbContext, IUnitOfWork unitOfWork)
+        public ContactServices(IContactRepository contactRepo, IUnitOfWork unitOfWork)
         {
-            this.dbContext = dbContext;
+            this.contactRepo = contactRepo;
             this.unitOfWork = unitOfWork;
         }
 
         public async Task Delete(Contact contact)
         {
-            dbContext.Contacts.Remove(contact);
-            await unitOfWork.SaveAsync();
+            await contactRepo.Delete(contact);
         }
 
         public async Task<Contact> Get(int id)
         {
-            var output = await dbContext.Contacts.FindAsync(id);
+            var output = await contactRepo.Get(id);
             return output;
         }
 
-        public async Task Insert(ContactInsertDto contactDto)
+        public async Task<int> Insert(ContactInsertDto contactDto)
         {
             var contact = new Contact()
             {
                 PhoneNumber = contactDto.PhoneNumber,
                 Address = contactDto.Address
             };
-            dbContext.Contacts.Add(contact);
-            await unitOfWork.SaveAsync();
+            return await contactRepo.Insert(contact);
+            
         }
 
         public async Task Update(Contact contact)
         {
-            dbContext.Contacts.Update(contact);
-            await unitOfWork.SaveAsync();
+            await contactRepo.Update(contact);
         }
     }
 }
