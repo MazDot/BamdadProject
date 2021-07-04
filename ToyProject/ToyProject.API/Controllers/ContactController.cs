@@ -15,37 +15,37 @@ namespace ToyProject.API.Controllers
     [ApiController]
     public class ContactController : ControllerBase
     {
-        private readonly IContactServices ContactServices;
+        private readonly IContactServices contactServices;
         public ContactController(IContactServices contactServices)
         {
-            this.ContactServices = contactServices;
+            this.contactServices = contactServices;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(ContactInsertDto contactDto)
         {
-            var output = await ContactServices.Insert(contactDto);
+            var output = await contactServices.Insert(contactDto);
             return Created($"ID : {output} + {contactDto}", contactDto);
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(Contact contact)
         {
-            await ContactServices.Delete(contact);
+            await contactServices.Delete(contact);
             return Ok();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var output = await ContactServices.Get(id);
+            var output = await contactServices.Get(id);
             return Ok(output);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(Contact contact)
         {
-            await ContactServices.Update(contact);
+            await contactServices.Update(contact);
             return Ok();
         }
 

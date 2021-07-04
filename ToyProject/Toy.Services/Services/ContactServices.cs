@@ -11,13 +11,11 @@ namespace Toy.Services.Services
 {
     public class ContactServices : IContactServices
     {
-        private readonly IUnitOfWork unitOfWork;
         private readonly IContactRepository contactRepo;
 
-        public ContactServices(IContactRepository contactRepo, IUnitOfWork unitOfWork)
+        public ContactServices(IContactRepository contactRepo)
         {
             this.contactRepo = contactRepo;
-            this.unitOfWork = unitOfWork;
         }
 
         public async Task Delete(Contact contact)

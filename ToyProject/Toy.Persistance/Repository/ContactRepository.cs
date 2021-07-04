@@ -15,6 +15,7 @@ namespace Toy.Persistance.Repository
         public ContactRepository(AppDbContext dbContext, IUnitOfWork unitOfWork)
         {
             this.dbContext = dbContext;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task Delete(Contact contact)
