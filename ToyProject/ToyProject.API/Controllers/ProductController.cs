@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Toy.Entities;
 using Toy.Services.Dto.Input;
 using Toy.Services.Services;
+using ToyProject.API.Validators;
 
 namespace ToyProject.API.Controllers
 {
@@ -23,8 +25,15 @@ namespace ToyProject.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProductInsertDto productDto)
         {
-            var output = await productServices.Insert(productDto);
-            return Created($"ID : {output} + {productDto}", productDto);
+            ProductValidator validator = new ProductValidator();
+            ValidationResult results = validator.Validate(productDto);
+            if (results.IsValid)
+            {
+                var output = await productServices.Insert(productDto);
+                return Ok(output);
+            }
+            return BadRequest(results.Errors);
+            
         }
 
         [HttpDelete]

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Toy.Entities
 {
-    public class Comment
+    public class Comment : BaseEntity
     {
         public string Description { get; set; }
         public Product Product { get; set; }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Toy.Entities;
 using Toy.Entities.Interfaces;
 using Toy.Services.Dto.Input;
 using Toy.Services.Services;
+using ToyProject.API.Validators;
 
 namespace ToyProject.API.Controllers
 {
@@ -24,8 +26,14 @@ namespace ToyProject.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ContactInsertDto contactDto)
         {
-            var output = await contactServices.Insert(contactDto);
-            return Created($"ID : {output} + {contactDto}", contactDto);
+            ContactValidator validator = new ContactValidator();
+            ValidationResult results = validator.Validate(contactDto);
+            if (results.IsValid)
+            {
+                var output = await contactServices.Insert(contactDto);
+                return Ok(output);
+            }
+            return BadRequest(results.Errors);
         }
 
         [HttpDelete]
