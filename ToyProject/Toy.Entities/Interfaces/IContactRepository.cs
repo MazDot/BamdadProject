@@ -7,9 +7,9 @@ namespace Toy.Entities.Interfaces
 {
     public interface IContactRepository
     {
-        Task Delete(Contact contact);
-        Task Update(Contact contact);
-        Task<int> Insert(Contact contact);
+        void Delete(Contact contact);
+        void Update(Contact contact);
+        int Insert(Contact contact);
         Task<Contact> Get(int id);
 
     }

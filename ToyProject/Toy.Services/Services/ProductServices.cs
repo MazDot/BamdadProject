@@ -11,15 +11,18 @@ namespace Toy.Services.Services
     public class ProductServices : IProductServices
     {
         private readonly IProductRepository productRepo;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ProductServices(IProductRepository IProductRepo)
+        public ProductServices(IProductRepository IProductRepo, IUnitOfWork unitOfWork)
         {
             this.productRepo = IProductRepo;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task Delete(Product product)
         {
-            await productRepo.Delete(product);
+            productRepo.Delete(product);
+            await unitOfWork.SaveAsync();
         }
 
         public async Task<Product> Get(int id)
@@ -40,12 +43,16 @@ namespace Toy.Services.Services
                 IsMale = productDto.IsMale,
                 InfluenceCategory = productDto.InfluenceCategory
             };
-            return await productRepo.Insert(product);
+            
+            var output = productRepo.Insert(product);
+            await unitOfWork.SaveAsync();
+            return (output);
         }
 
         public async Task Update(Product product)
         {
-            await productRepo.Update(product);
+            productRepo.Update(product);
+            await unitOfWork.SaveAsync();
         }
     }
 }

@@ -10,19 +10,16 @@ namespace Toy.Persistance.Repository
 {
    public class UserRepository: IUserRepository
     {
-        private readonly IUnitOfWork unitOfWOrk;
         private readonly AppDbContext dbContext;
         public UserRepository(IUnitOfWork unitOfWOrk, AppDbContext dbContext)
         {
-            this.unitOfWOrk = unitOfWOrk;
             this.dbContext = dbContext;
         }
        
 
-        public async Task Delete(User user)
+        public void Delete(User user)
         {
             dbContext.Remove<User>(user);
-            await unitOfWOrk.SaveAsync();
         }
 
         public async Task<User> Get(int id)
@@ -31,17 +28,15 @@ namespace Toy.Persistance.Repository
             return output;
         }
 
-        public async Task<int> Insert(User user)
+        public int Insert(User user)
         {
             dbContext.Add<User>(user);
-            await unitOfWOrk.SaveAsync();
             return user.Id;
         }
 
-        public async Task Update(User user)
+        public void Update(User user)
         {
             dbContext.Update<User>(user);
-            await unitOfWOrk.SaveAsync();
         }
     }
 }

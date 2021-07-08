@@ -7,9 +7,9 @@ namespace Toy.Entities.Interfaces
 {
     public interface IProductRepository
     {
-        Task Delete(Product product);
-        Task Update(Product product);
-        Task<int> Insert(Product product);
+        void Delete(Product product);
+        void Update(Product product);
+        int Insert(Product product);
         Task<Product> Get(int id);
 
     }

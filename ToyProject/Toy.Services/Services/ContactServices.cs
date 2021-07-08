@@ -12,15 +12,18 @@ namespace Toy.Services.Services
     public class ContactServices : IContactServices
     {
         private readonly IContactRepository contactRepo;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ContactServices(IContactRepository contactRepo)
+        public ContactServices(IContactRepository contactRepo, IUnitOfWork unitOfWork)
         {
             this.contactRepo = contactRepo;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task Delete(Contact contact)
         {
-            await contactRepo.Delete(contact);
+            contactRepo.Delete(contact);
+            await unitOfWork.SaveAsync();
         }
 
         public async Task<Contact> Get(int id)
@@ -36,13 +39,16 @@ namespace Toy.Services.Services
                 PhoneNumber = contactDto.PhoneNumber,
                 Address = contactDto.Address
             };
-            return await contactRepo.Insert(contact);
-            
+            var output = contactRepo.Insert(contact);
+            await unitOfWork.SaveAsync();
+            return (output);
+
         }
 
         public async Task Update(Contact contact)
         {
-            await contactRepo.Update(contact);
+            contactRepo.Update(contact);
+            await unitOfWork.SaveAsync();
         }
     }
 }

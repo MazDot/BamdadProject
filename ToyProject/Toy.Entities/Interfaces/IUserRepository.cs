@@ -7,9 +7,9 @@ namespace Toy.Entities.Interfaces
 {
    public interface IUserRepository
     {
-        Task Delete(User user);
-        Task Update(User user);
-        Task<int> Insert(User user);
+        void Delete(User user);
+        void Update(User user);
+        int Insert(User user);
         Task<User> Get(int id);
     }
 }

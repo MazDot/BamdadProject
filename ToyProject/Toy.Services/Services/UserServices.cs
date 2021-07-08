@@ -11,14 +11,18 @@ namespace Toy.Services.Services
     public class UserServices : IUserServices
     {
         private readonly IUserRepository userRepo;
-        public UserServices(IUserRepository userRepo)
+        private readonly IUnitOfWork unitOfWork;
+
+        public UserServices(IUserRepository userRepo, IUnitOfWork unitOfWork)
         {
             this.userRepo = userRepo;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task Delete(User user)
         {
-            await userRepo.Delete(user);
+            userRepo.Delete(user);
+            await unitOfWork.SaveAsync();
 
         }
 
@@ -41,12 +45,15 @@ namespace Toy.Services.Services
                 IsActive = userDto.IsActive
 
             };
-            return await userRepo.Insert(user);
+            var output = userRepo.Insert(user);
+            await unitOfWork.SaveAsync();
+            return (output);
         }
 
         public async Task Update(User user)
         {
-            await userRepo.Update(user);
+            userRepo.Update(user);
+            await unitOfWork.SaveAsync();
         }
     }
 }
