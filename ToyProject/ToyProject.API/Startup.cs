@@ -15,6 +15,7 @@ using Toy.Entities.Interfaces;
 using Toy.Persistance.Database;
 using Toy.Persistance.Repository;
 using Toy.Services.Services;
+using Microsoft.OpenApi.Models;
 
 namespace ToyProject.API
 {
@@ -47,6 +48,11 @@ namespace ToyProject.API
             services.AddDbContext<AppDbContext>
                (o => o.UseSqlServer(Configuration.GetConnectionString("ToyDb")));
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
+
             services.AddControllers();
         }
 
@@ -68,6 +74,13 @@ namespace ToyProject.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "My API V1");
+            });
+
         }
     }
 }
