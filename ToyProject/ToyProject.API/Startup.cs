@@ -34,10 +34,12 @@ namespace ToyProject.API
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
 
             services.AddScoped<IContactServices, ContactServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IStoreServices, StoreServices>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<AppDbContext>

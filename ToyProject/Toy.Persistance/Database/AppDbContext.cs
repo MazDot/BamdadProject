@@ -12,6 +12,7 @@ namespace Toy.Persistance.Database
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Store> Stores { get; set; }
 
         public AppDbContext()
         {
