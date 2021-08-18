@@ -12,11 +12,13 @@ namespace Toy.Services.Services
     {
         private readonly IUserRepository userRepo;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IPasswordHasher passwordHasher;
 
-        public UserServices(IUserRepository userRepo, IUnitOfWork unitOfWork)
+        public UserServices(IUserRepository userRepo, IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
         {
             this.userRepo = userRepo;
             this.unitOfWork = unitOfWork;
+            this.passwordHasher = passwordHasher;
         }
 
         public async Task Delete(User user)
@@ -24,6 +26,16 @@ namespace Toy.Services.Services
             userRepo.Delete(user);
             await unitOfWork.SaveAsync();
 
+        }
+        public async Task<User> GetByEmail(string email)
+        {
+            var output = await userRepo.GetByEmail(email);
+            return output;
+        }
+        public async Task<User> GetByUsername(string username)
+        {
+            var output = await userRepo.GetByUsername(username);
+            return output;
         }
 
         public async Task<User> Get(int id)
@@ -34,15 +46,15 @@ namespace Toy.Services.Services
 
         public async Task<int> Insert(UserInsertDto userDto)
         {
+            string passwordHash = passwordHasher.HashPassword(userDto.Password);
             var user = new User()
             {
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,
-                Mobile = userDto.Mobile,
-                Address = userDto.Address,
-                NationalCode=userDto.NationalCode,
-                AddedDate=userDto.AddedDate,
-                IsActive = userDto.IsActive
+                Username = userDto.Username,
+                Email = userDto.Email,
+                PasswordHash = passwordHash,
+                Role = userDto.Role
 
             };
             var output = userRepo.Insert(user);

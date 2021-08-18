@@ -16,6 +16,11 @@ using Toy.Persistance.Database;
 using Toy.Persistance.Repository;
 using Toy.Services.Services;
 using Microsoft.OpenApi.Models;
+using Toy.Services.Services.Tokens;
+using Toy.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ToyProject.API
 {
@@ -37,16 +42,30 @@ namespace ToyProject.API
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
+            //services
             services.AddScoped<IContactServices, ContactServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IStoreServices, StoreServices>();
             services.AddScoped<ICategoryServices, CategoryServices>();
 
+            AuthenticationConfiguration authenticationConfiguration = new AuthenticationConfiguration();
+            Configuration.Bind("Authentication", authenticationConfiguration);
+            services.AddSingleton(authenticationConfiguration);
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+            //tokens
+            services.AddScoped<TokenGenerator>();
+            services.AddScoped<AccessTokenGenerator>();
+            services.AddScoped<RefreshTokenGenerator>();
+            services.AddScoped<RefreshTokenValidator>();
+
             services.AddDbContext<AppDbContext>
-               (o => o.UseSqlServer(Configuration.GetConnectionString("ToyDb")));
+               (o => o.UseSqlServer(Configuration.GetConnectionString("ToysDb")));
 
             services.AddSwaggerGen(c =>
             {
@@ -54,6 +73,20 @@ namespace ToyProject.API
             });
 
             services.AddControllers();
+
+            //authentication service Jwt
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.Secret)),
+                    ValidIssuer = authenticationConfiguration.Issuer,
+                    ValidAudience = authenticationConfiguration.Audience,
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +100,8 @@ namespace ToyProject.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

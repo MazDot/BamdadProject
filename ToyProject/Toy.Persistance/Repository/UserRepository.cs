@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Toy.Entities;
 using Toy.Entities.Interfaces;
 using Toy.Persistance.Database;
+using System.Linq;
 
 namespace Toy.Persistance.Repository
 {
@@ -26,6 +27,18 @@ namespace Toy.Persistance.Repository
         {
             var output = await dbContext.Users.FindAsync(id);
             return output;
+        }
+        public async Task<User> GetByEmail(string email)
+        {
+            var output = dbContext.Users.FirstOrDefault(x => x.Email == email);
+            return output;
+
+        }
+        public async Task<User> GetByUsername(string username)
+        {
+            var output = dbContext.Users.FirstOrDefault(x => x.Username == username);
+            return output;
+
         }
 
         public int Insert(User user)

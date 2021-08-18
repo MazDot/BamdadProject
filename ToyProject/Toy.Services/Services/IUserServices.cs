@@ -11,6 +11,8 @@ namespace Toy.Services.Services
     {
         Task<int> Insert(UserInsertDto userDto);
         Task<User> Get(int id);
+        Task<User> GetByEmail(string email);
+        Task<User> GetByUsername(string username);
         Task Update(User user);
         Task Delete(User user);
     }
