@@ -34,7 +34,7 @@ namespace Toy.Services.Services
             var category = new Category()
             {
                 Name=categoryDto.Name,
-                
+                Products = categoryDto.Products
             };
 
             var output = categoryRepo.Insert(category);
