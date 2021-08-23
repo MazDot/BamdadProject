@@ -21,6 +21,7 @@ using Toy.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Net.Http.Headers;
 
 namespace ToyProject.API
 {
@@ -41,7 +42,6 @@ namespace ToyProject.API
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             //services
@@ -49,7 +49,6 @@ namespace ToyProject.API
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IStoreServices, StoreServices>();
-            services.AddScoped<ICategoryServices, CategoryServices>();
 
             AuthenticationConfiguration authenticationConfiguration = new AuthenticationConfiguration();
             Configuration.Bind("Authentication", authenticationConfiguration);
@@ -72,8 +71,6 @@ namespace ToyProject.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
-            services.AddControllers();
-
             //authentication service Jwt
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
             {
@@ -87,6 +84,16 @@ namespace ToyProject.API
                     ValidateAudience = true
                 };
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();});
+            });
+
+            services.AddControllers();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,7 +106,15 @@ namespace ToyProject.API
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "My API V1");
+            });
+
             app.UseRouting();
+
+            app.UseCors("AllowAll");
 
             app.UseAuthentication();
 
@@ -108,12 +123,6 @@ namespace ToyProject.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("v1/swagger.json", "My API V1");
             });
 
         }

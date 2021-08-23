@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,6 +17,7 @@ namespace ToyProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAll")]
     public class UserController : ControllerBase
     {
         private readonly IUserServices userServices;
@@ -35,6 +37,7 @@ namespace ToyProject.API.Controllers
         }
 
         [HttpPost("register")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> Register([FromBody] UserInsertDto userRegister)
         {
             if (!ModelState.IsValid)
@@ -65,6 +68,7 @@ namespace ToyProject.API.Controllers
         }
 
         [HttpPost("login")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLogin)
         {
             if (!ModelState.IsValid)
@@ -100,6 +104,7 @@ namespace ToyProject.API.Controllers
         }
 
         [HttpPost("refresh")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             if (!ModelState.IsValid)
@@ -150,6 +155,19 @@ namespace ToyProject.API.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpGet("getUser")]
+        public async Task<IActionResult> GetUser()
+        {
+            int id = int.Parse(HttpContext.User.FindFirstValue("id"));
+            var outputUser = await userServices.Get(id);
+            if (outputUser == null)
+            {
+                return NotFound(new ErrorResponse("User does not exist"));
+            }
+            return Ok(outputUser);
+        }
+
         private IActionResult BadRequestStateModel()
         {
             IEnumerable<string> errorMessages = ModelState.Values.SelectMany(x => x.Errors.Select(t => t.ErrorMessage));
@@ -158,6 +176,7 @@ namespace ToyProject.API.Controllers
 
         [Authorize]
         [HttpPut("edit")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> Update(User user)
         {
             await userServices.Update(user);

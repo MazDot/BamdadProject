@@ -11,19 +11,19 @@ namespace ToyProject.API.Validators
     {
         public ProductValidator()
         {
-            RuleFor(x => x.AgeRestriction)
-                .Must(BeAgeValid).WithMessage("Invalid input for age restriction (must be between 1-5)");
+            //RuleFor(x => x.AgeRestriction)
+            //    .Must(BeAgeValid).WithMessage("Invalid input for age restriction (must be between 1-5)");
         }
 
-        protected bool BeAgeValid (int ageRestriction)
-        {
-            if (ageRestriction >= 1 && ageRestriction <= 5)
-            {
-                return true;
-            }
-            return false;
+        //protected bool BeAgeValid (int ageRestriction)
+        //{
+        //    if (ageRestriction >= 1 && ageRestriction <= 5)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
 
-        }
+        //}
 
     }
 }

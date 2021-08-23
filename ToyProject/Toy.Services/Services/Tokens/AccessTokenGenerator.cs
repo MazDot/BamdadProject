@@ -24,9 +24,9 @@ namespace Toy.Services.Services.Tokens
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("id", user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim("Email", user.Email),
+                new Claim("Name", user.Username),
+                new Claim("Role", user.Role)
             };
             return tokenGenerator.GenerateToken(config.Secret, config.Issuer, config.Audience, config.ExpirationDays, claims);
 

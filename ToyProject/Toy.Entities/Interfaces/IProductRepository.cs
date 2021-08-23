@@ -11,6 +11,8 @@ namespace Toy.Entities.Interfaces
         void Update(Product product);
         int Insert(Product product);
         Task<Product> Get(int id);
+        Task<IEnumerable<Product>> GetAllByUserId(int userId);
+        Task<IEnumerable<Product>> GetByCategory(string category);
 
     }
 }

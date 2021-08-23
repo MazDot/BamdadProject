@@ -31,17 +31,28 @@ namespace Toy.Services.Services
             return output;
         }
 
-        public async Task<int> Insert(ProductInsertDto productDto)
+        public async Task<IEnumerable<Product>> GetAllByUserId(int userId)
         {
+            var output = await productRepo.GetAllByUserId(userId);
+            return output;
+        }
+
+        public async Task<IEnumerable<Product>> GetByCategory(string category)
+        {
+            IEnumerable<Product> output = await productRepo.GetByCategory(category);
+            return output;
+        }
+
+        public async Task<int> Insert(ProductInsertDto productDto, int userId)
+        {
+            int price = int.Parse(productDto.Price);
             var product = new Product()
             {
                 Name = productDto.Name,
-                Price = productDto.Price,
-                CategoryId = productDto.CategoryId,
-                Brand = productDto.Brand,
-                AgeRestriction = productDto.AgeRestriction,
-                IsMale = productDto.IsMale,
-                InfluenceCategory = productDto.InfluenceCategory
+                Price = price,
+                Category = productDto.Category,
+                PicURL = productDto.PicURL,
+                UserId = userId
             };
             
             var output = productRepo.Insert(product);

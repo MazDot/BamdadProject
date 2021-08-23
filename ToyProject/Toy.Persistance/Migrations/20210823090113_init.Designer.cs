@@ -10,7 +10,7 @@ using Toy.Persistance.Database;
 namespace Toy.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210818125601_init")]
+    [Migration("20210823090113_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,30 +81,29 @@ namespace Toy.Persistance.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AgeRestriction")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Brand")
+                    b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
-
-                    b.Property<string>("InfluenceCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsMale")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("PicURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Products");
                 });
@@ -197,13 +196,17 @@ namespace Toy.Persistance.Migrations
 
             modelBuilder.Entity("Toy.Entities.Product", b =>
                 {
-                    b.HasOne("Toy.Entities.Category", "Category")
+                    b.HasOne("Toy.Entities.Category", null)
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Toy.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Toy.Entities.Category", b =>

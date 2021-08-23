@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toy.Entities;
@@ -25,6 +26,18 @@ namespace Toy.Persistance.Repository
         {
             var output = await dbContext.Products.FindAsync(id);
             return output;
+        }
+
+        public async Task<IEnumerable<Product>> GetAllByUserId(int userId)
+        {
+            IEnumerable<Product> output = dbContext.Products.Where(x => x.UserId == userId);
+            return output;
+        }
+        public async Task<IEnumerable<Product>> GetByCategory(string category)
+        {
+            var output = dbContext.Products.Where(x => x.Category == category);
+            return output;
+
         }
 
         public int Insert(Product product)
